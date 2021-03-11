@@ -1,0 +1,42 @@
+{
+  "name": "smtp-address-parser",
+  "version": "1.0.0",
+  "description": "Parse an SMTP (RFC-5321) address",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "clean": "rm -rf node_modules",
+    "build": "npx tsc",
+    "grammar": "npx nearleyc lib/grammar.ne -o lib/grammar.ts",
+    "postinstall": "npm run grammar && npm run build",
+    "test": "npx mocha"
+  },
+  "keywords": [
+    "RFC-5321",
+    "address",
+    "email",
+    "envelope",
+    "rfc2821",
+    "rfc5321",
+    "rfc821"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gene-hightower/smtp-address-parser.git"
+  },
+  "author": "Gene Hightower <gene@digilicious.com> (https://digilicious.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gene-hightower/smtp-address-parser/issues"
+  },
+  "homepage": "https://github.com/gene-hightower/smtp-address-parser#readme",
+  "dependencies": {
+    "nearley": "^2.20.1",
+    "punycode": "^2.1.0",
+    "typescript": "^4.2.3"
+  },
+  "devDependencies": {
+    "eslint": "*",
+    "mocha": "*"
+  }
+}
