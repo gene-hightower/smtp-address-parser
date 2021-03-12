@@ -1,5 +1,4 @@
 *~
 dist
-node_modules
 lib/grammar.ts
-lib/index.ts
+node_modules
