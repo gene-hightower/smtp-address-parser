@@ -146,9 +146,9 @@ describe("bad addresses fail", function () {
         });
     });
     // even if escaped (preceded by a backslash), spaces, quotes, and backslashes must still be contained by quotes
-    it('this still"not\\allowed@example.com', function () {
+    it('this\ still\"not\\allowed@example.com', function () {
         assert.throws(function () {
-            parse('this still"not\\allowed@example.com');
+            parse('this\ still\"not\\allowed@example.com');
         });
     });
     // Underscore is not allowed in domain part
