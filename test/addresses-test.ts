@@ -78,17 +78,22 @@ describe("good addresses pass", function () {
 });
 
 describe("bad addresses fail", function () {
-    it("Bogus address literal [300.0.0.1]", function () {
+    it('badly escaped quoted "john\\\\"doe"@example.org', function () {
+        assert.throws(function () {
+            parse('"john\\\\"doe"@example.org');
+        });
+    });
+    it("bogus address literal [300.0.0.1]", function () {
         assert.throws(function () {
             parse("user@[300.0.0.1]");
         });
     });
-    it("Bogus address literal [127.0.0.0.1]", function () {
+    it("bogus address literal [127.0.0.0.1]", function () {
         assert.throws(function () {
             parse("user@[127.0.0.0.1]");
         });
     });
-    it("Bogus address literal [127.0.1]", function () {
+    it("bogus address literal [127.0.1]", function () {
         assert.throws(function () {
             parse("user@[127.0.1]");
         });
