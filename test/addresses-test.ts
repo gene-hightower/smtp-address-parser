@@ -107,6 +107,16 @@ describe("bad addresses fail", function () {
             parse("foo bar@example.com");
         });
     });
+    it("double dot john..doe@example.com", function () {
+        assert.throws(function () {
+            parse("john..doe@example.com");
+        });
+    });
+    it("brackets <john.doe@example.com>", function () {
+        assert.throws(function () {
+            parse("<john.doe@example.com>");
+        });
+    });
     // From examples from <https://en.wikipedia.org/wiki/Email_address#Examples>
     // no @ character
     it("Abc.example.com", function () {
