@@ -5,7 +5,7 @@
   "main": "dist/lib/index.js",
   "types": "dist/lib/index.d.ts",
   "scripts": {
-    "clean": "rm -rf node_modules lib/grammar.ts",
+    "clean": "rm -rf node_modules lib/grammar.ts dist",
     "build": "npx tsc --build tsconfig.json",
     "grammar": "npx nearleyc lib/grammar.ne -o lib/grammar.ts",
     "postinstall": "npm run grammar && npm run build",
