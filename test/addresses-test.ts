@@ -93,6 +93,11 @@ describe("bad addresses fail", function () {
             parse("user@[127.0.0.0.1]");
         });
     });
+    it("bogus address literal [127.00.0.1]", function () {
+        assert.throws(function () {
+            parse("user@[127.00.0.1]");
+        });
+    });
     it("bogus address literal [127.0.1]", function () {
         assert.throws(function () {
             parse("user@[127.0.1]");
