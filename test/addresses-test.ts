@@ -48,6 +48,9 @@ describe("good addresses pass", function () {
     it("escaped quoted pair", function () {
         _check('"john\\@doe"@example.org', undefined, '"john\\@doe"', "example.org", undefined);
     });
+    it("escaped quoted", function () {
+        _check('"john\\"doe"@example.org', undefined, '"john\\"doe"', "example.org", undefined);
+    });
     it("bangified host route used for uucp mailers", function () {
         _check("mailhost!username@example.org", "mailhost!username", undefined, "example.org", undefined);
     });
