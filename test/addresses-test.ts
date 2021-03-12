@@ -57,6 +57,12 @@ describe("good addresses pass", function () {
     it('address literal to the right of the "@" sign', function () {
         _check("simple@[127.0.0.1]", "simple", undefined, undefined, "[127.0.0.1]");
     });
+    it('IPv6 address literal to the right of the "@" sign', function () {
+        _check("simple@[IPv6:::1]", "simple", undefined, undefined, "[IPv6:::1]");
+    });
+    it('Another IPv6 address literal', function () {
+        _check("simple@[IPv6:68:1c:a2:12:4a:e5]", "simple", undefined, undefined, "[IPv6:68:1c:a2:12:4a:e5]");
+    });
     it("Unicode UTF-8", function () {
         _check("我買@屋企.香港", "我買", undefined, "屋企.香港", undefined);
     });
@@ -66,6 +72,21 @@ describe("good addresses pass", function () {
 });
 
 describe("bad addresses fail", function () {
+    it("Bogus address literal [300.0.0.1]", function () {
+        assert.throws(function () {
+            parse("user@[300.0.0.1]");
+        });
+    });
+    it("Bogus address literal [127.0.0.0.1]", function () {
+        assert.throws(function () {
+            parse("user@[127.0.0.0.1]");
+        });
+    });
+    it("Bogus address literal [127.0.1]", function () {
+        assert.throws(function () {
+            parse("user@[127.0.1]");
+        });
+    });
     it("user@example.com#", function () {
         assert.throws(function () {
             parse("user@example.com#");
