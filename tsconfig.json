@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es2020",
+    "lib": ["es2020"],
     "module": "commonjs",
-    "declaration": true,
-    "outDir": "./dist",
-    "sourceMap": true,
-    "rootDir": "./lib",
+    "target": "es2020",
+
     "strict": true,
-    "noImplicitReturns": true,
+    "declaration": true,
+    "outDir": "dist",
+    "sourceMap": true,
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -15,6 +15,5 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
   }
 }

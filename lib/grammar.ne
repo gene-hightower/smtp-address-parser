@@ -1,15 +1,13 @@
 @preprocessor typescript
 
-main -> Mailbox | Path
-
 @{%
 function flat_string(d: any) {
-  if (d) {
-    if (Array.isArray(d))
-      return d.flat(Infinity).join("");
-    return d;
-  }
-  return "";
+    if (d) {
+        if (Array.isArray(d))
+            return d.flat(Infinity).join("");
+        return d;
+    }
+    return "";
 }
 %}
 
@@ -19,14 +17,13 @@ times_3[X]     -> $X $X $X
 times_5[X]     -> $X $X $X $X $X
 times_7[X]     -> $X $X $X $X $X $X $X
 
-## https://tools.ietf.org/html/rfc5321#section-4.1.2
+## <https://tools.ietf.org/html/rfc5321#section-4.1.2>
 
 Reverse_path   -> Path | "<>"
 
-Forward_path   -> Path
+Forward_path   -> ("<Postmaster@"i Domain ">") | "<Postmaster>"i | Path
 
 Path           -> "<" ( A_d_l ":" ):? Mailbox ">"
-                  {% function(d) { return d[2]; } %}
 
 A_d_l          -> At_domain ( "," At_domain ):*
                 # Note that this form, the so-called "source
@@ -56,15 +53,33 @@ address_literal  -> "[" ( IPv4_address_literal |
                           General_address_literal ) "]"
                     # See Section 4.1.3
 
-non_local_part -> Domain | address_literal
-
-Mailbox        -> Local_part "@" non_local_part {%
+non_local_part -> Domain {%
                     function(d) {
-                      return { local_part: flat_string(d[0]), domain: flat_string(d[2]), };
+                        return { DomainName: flat_string(d[0]) };
+                    }
+                  %}
+                | address_literal {%
+                    function(d) {
+                        return { AddressLiteral: flat_string(d[0]) };
                     }
                   %}
 
-Local_part     -> Dot_string | Quoted_string
+Mailbox        -> Local_part "@" non_local_part {%
+                    function(d) {
+                        return { localPart: flat_string(d[0]), domainPart: flat_string(d[2]) };
+                    }
+                  %}
+
+Local_part     -> Dot_string {%
+                    function(d) {
+                        return { DotString: flat_string(d[0]) };
+                    }
+                  %}
+                | Quoted_string {%
+                    function(d) {
+                        return { QuotedString: flat_string(d[0]) };
+                    }
+                  %}
                 # MAY be case-sensitive
 
 Dot_string     -> Atom ("." Atom):*
