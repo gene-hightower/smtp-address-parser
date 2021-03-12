@@ -42,7 +42,10 @@ describe("good addresses pass", function () {
     it("quoted double dot", function () {
         _check('"john..doe"@example.org', undefined, '"john..doe"', "example.org", undefined);
     });
-    it("escaped quoted pairt", function () {
+    it('address in quoted local-part "john.doe@example.org"@example.org', function () {
+        _check('"john.doe@example.org"@example.org', undefined, '"john.doe@example.org"', "example.org", undefined);
+    });
+    it("escaped quoted pair", function () {
         _check('"john\\@doe"@example.org', undefined, '"john\\@doe"', "example.org", undefined);
     });
     it("bangified host route used for uucp mailers", function () {
