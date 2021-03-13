@@ -6,10 +6,10 @@
   "types": "dist/lib/index.d.ts",
   "scripts": {
     "clean": "rm -rf node_modules lib/grammar.ts dist",
-    "build": "npx tsc --build tsconfig.json",
-    "grammar": "npx nearleyc lib/grammar.ne -o lib/grammar.ts",
-    "postinstall": "npm run grammar && npm run build",
-    "test": "npx mocha dist/test/*-test.js"
+    "build": "tsc",
+    "grammar": "nearleyc lib/grammar.ne -o lib/grammar.ts",
+    "prepare": "npm run grammar && npm run build",
+    "test": "mocha dist/test/*-test.js"
   },
   "keywords": [
     "RFC-5321",
@@ -31,13 +31,13 @@
   },
   "homepage": "https://github.com/gene-hightower/smtp-address-parser#readme",
   "dependencies": {
-    "nearley": "^2.20.1",
     "typescript": "^4.2.3"
   },
   "devDependencies": {
     "@types/jest": "^26.0.20",
     "@types/node": "^14.14.33",
     "eslint": "*",
-    "mocha": "*"
+    "mocha": "*",
+    "nearley": "^2.20.1"
   }
 }
