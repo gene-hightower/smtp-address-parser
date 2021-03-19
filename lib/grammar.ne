@@ -1,13 +1,16 @@
 @preprocessor typescript
 
 @{%
+const deepFlatten = (arr: any) =>
+  [].concat(...arr.map((v: any) => (Array.isArray(v) ? deepFlatten(v) : v)));
+
 function flat_string(d: any) {
-    if (d) {
-        if (Array.isArray(d))
-            return d.flat(Infinity).join("");
-        return d;
-    }
-    return "";
+  if (d) {
+    if (Array.isArray(d))
+      return deepFlatten(d).join("");
+    return d;
+  }
+  return "";
 }
 %}
 
