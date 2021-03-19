@@ -11,6 +11,9 @@
     "prepare": "npm run grammar && npm run build",
     "test": "mocha dist/test/*-test.js"
   },
+  "engines": {
+    "node": ">=0.10"
+  },
   "keywords": [
     "RFC-5321",
     "address",
