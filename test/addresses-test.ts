@@ -108,11 +108,6 @@ describe("bad addresses fail", function () {
             parse("user@example.com#");
         });
     });
-    it("<user@example.com>", function () {
-        assert.throws(function () {
-            parse("<user@example.com>");
-        });
-    });
     it("user@example.com.", function () {
         assert.throws(function () {
             parse("user@example.com.");
