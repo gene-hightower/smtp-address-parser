@@ -5,11 +5,12 @@
   "main": "dist/lib/index.js",
   "types": "dist/lib/index.d.ts",
   "scripts": {
-    "clean": "rm -rf node_modules lib/grammar.ts dist",
     "build": "tsc",
+    "clean": "rm -rf node_modules lib/grammar.ts dist",
+    "coverage": "jest --collectCoverage -- dist/test/*.test.js",
     "grammar": "nearleyc lib/grammar.ne -o lib/grammar.ts",
     "prepare": "npm run grammar && npm run build",
-    "test": "mocha dist/test/*-test.js"
+    "test": "jest dist/test/*.test.js"
   },
   "engines": {
     "node": ">=0.10"
@@ -41,6 +42,6 @@
     "@types/jest": "^26.0.20",
     "@types/node": "^14.14.33",
     "eslint": "*",
-    "mocha": "*"
+    "jest": "^26.6.3"
   }
 }
