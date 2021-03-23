@@ -17,3 +17,8 @@ Also, domain names are limited to 255 octets, see:
 And individual labels within a domain name are limited to 63
 octets or less, see:
 <https://tools.ietf.org/html/rfc1035> section 2.3.4. Size limits
+
+However, RFC-5321 section 4.5.3.1. “Size Limits and Minimums” says:
+
+“To the maximum extent possible, implementation techniques that impose
+no limits on the length of these objects should be used.”
