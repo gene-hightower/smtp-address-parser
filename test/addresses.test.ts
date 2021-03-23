@@ -75,6 +75,9 @@ describe("good addresses pass", function () {
     it("#user@example.com", function () {
         _check("#user@example.com", "#user", undefined, "example.com", undefined);
     });
+    it('General address literal', function () {
+        _check("simple@[tag:Can-Be-Anything]", "simple", undefined, undefined, "[tag:Can-Be-Anything]");
+    });
 });
 
 describe("bad addresses fail", function () {
