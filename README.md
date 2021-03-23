@@ -2,6 +2,8 @@
 
 Parse an SMTP (RFC-5321) address.
 
+[![https://nodei.co/npm/smtp-address-parser.png?downloads=true&downloadRank=true&stars=true](https://nodei.co/npm/smtp-address-parser.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/smtp-address-parser)
+
 ## Some notes
 
 Length limitations are not checked.
