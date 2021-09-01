@@ -186,4 +186,7 @@ describe("test normalize", function () {
     it("foo.bar+baz@example.org", function () {
         assert.equal(normalize("foo.bar+baz@example.org"), "foobar@example.org");
     });
+    it("Foo.Bar+Baz@Example.Org", function () {
+        assert.equal(normalize("Foo.Bar+Baz@Example.Org"), "foobar@example.org");
+    });
 });

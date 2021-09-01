@@ -43,7 +43,7 @@ export function normalize(address: string) {
             return a.localPart.DotString.substr(0, plus_loc);
         })();
         const dotless = tagless.replace(/\./g, "");
-        return dotless;
+        return dotless.toLowerCase();
     })();
     return `${local}@${domain}`;
 }
