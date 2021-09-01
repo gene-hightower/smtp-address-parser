@@ -2,7 +2,7 @@
 
 const assert = require("assert");
 
-const { parse } = require("../lib/index.js");
+const { normalize, parse } = require("../lib/index.js");
 
 function _check(address: string, dot?: string, quote?: string, name?: string, addr?: string) {
     const a = parse(address);
@@ -66,7 +66,7 @@ describe("good addresses pass", function () {
     it('IPv6 address literal to the right of the "@" sign', function () {
         _check("simple@[IPv6:::1]", "simple", undefined, undefined, "[IPv6:::1]");
     });
-    it('Another IPv6 address literal', function () {
+    it("Another IPv6 address literal", function () {
         _check("simple@[IPv6:68:1c:a2:12:4a:e5]", "simple", undefined, undefined, "[IPv6:68:1c:a2:12:4a:e5]");
     });
     it("Unicode UTF-8", function () {
@@ -75,7 +75,7 @@ describe("good addresses pass", function () {
     it("#user@example.com", function () {
         _check("#user@example.com", "#user", undefined, "example.com", undefined);
     });
-    it('General address literal', function () {
+    it("General address literal", function () {
         _check("simple@[tag:Can-Be-Anything]", "simple", undefined, undefined, "[tag:Can-Be-Anything]");
     });
 });
@@ -167,5 +167,23 @@ describe("bad addresses fail", function () {
         assert.throws(function () {
             parse("i_like_underscore@but_its_not_allowed_in_this_part.example.com");
         });
+    });
+});
+
+describe("test normalize", function () {
+    it("foo@example.org", function () {
+        assert.equal(normalize("foo@example.org"), "foo@example.org");
+    });
+    it("foo+bar@example.org", function () {
+        assert.equal(normalize("foo+bar@example.org"), "foo@example.org");
+    });
+    it("foo+@example.org", function () {
+        assert.equal(normalize("foo+@example.org"), "foo@example.org");
+    });
+    it("foo.bar@example.org", function () {
+        assert.equal(normalize("foo.bar@example.org"), "foobar@example.org");
+    });
+    it("foo.bar+baz@example.org", function () {
+        assert.equal(normalize("foo.bar+baz@example.org"), "foobar@example.org");
     });
 });
