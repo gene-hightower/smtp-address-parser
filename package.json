@@ -1,6 +1,6 @@
 {
   "name": "smtp-address-parser",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Parse an SMTP (RFC-5321) address",
   "main": "dist/lib/index.js",
   "types": "dist/lib/index.d.ts",

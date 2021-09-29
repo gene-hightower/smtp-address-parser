@@ -21,6 +21,22 @@ export function parse(address: string) {
 }
 
 /**
+ * Apply common addreess local-part normalization rules, strip
+ * "+something" and remove interior "."s in a dotString. Fold case.
+ */
+export function normalize_dot_string(dot_string: string) {
+    const tagless = (function () {
+        const plus_loc = dot_string.indexOf("+");
+        if (plus_loc === -1) {
+            return dot_string;
+        }
+        return dot_string.substr(0, plus_loc);
+    })();
+    const dotless = tagless.replace(/\./g, "");
+    return dotless.toLowerCase();
+}
+
+/**
  * Apply common address normalization rules, strip "+something" and
  * remove interior "."s in a dotString. Fold case.
  */
@@ -35,15 +51,7 @@ export function normalize(address: string) {
             // Should normalize quoted string.
             return a.localPart.QuotedString;
         }
-        const tagless = (function () {
-            const plus_loc = a.localPart.DotString.indexOf("+");
-            if (plus_loc === -1) {
-                return a.localPart.DotString;
-            }
-            return a.localPart.DotString.substr(0, plus_loc);
-        })();
-        const dotless = tagless.replace(/\./g, "");
-        return dotless.toLowerCase();
+        return normalize_dot_string(a.localPart.DotString);
     })();
     return `${local}@${domain}`;
 }

@@ -2,7 +2,7 @@
 
 const assert = require("assert");
 
-const { normalize, parse } = require("../lib/index.js");
+const { normalize_dot_string, normalize, parse } = require("../lib/index.js");
 
 function _check(address: string, dot?: string, quote?: string, name?: string, addr?: string) {
     const a = parse(address);
@@ -171,6 +171,18 @@ describe("bad addresses fail", function () {
 });
 
 describe("test normalize", function () {
+    it("foo", function () {
+        assert.equal(normalize_dot_string("foo"), "foo");
+    });
+    it("foo+bar", function () {
+        assert.equal(normalize_dot_string("foo+bar"), "foo");
+    });
+    it("foo.bar", function () {
+        assert.equal(normalize_dot_string("foo.bar"), "foobar");
+    });
+    it("Foo.Bar", function () {
+        assert.equal(normalize_dot_string("Foo.Bar"), "foobar");
+    });
     it("foo@example.org", function () {
         assert.equal(normalize("foo@example.org"), "foo@example.org");
     });
