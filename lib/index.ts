@@ -21,7 +21,7 @@ export function parse(address: string) {
 }
 
 /**
- * Apply common addreess local-part normalization rules, strip
+ * Apply Gmail style addreess local-part normalization rules, strip
  * "+something" and remove interior "."s in a dotString. Fold case.
  */
 export function normalize_dot_string(dot_string: string) {
@@ -37,8 +37,8 @@ export function normalize_dot_string(dot_string: string) {
 }
 
 /**
- * Apply common address normalization rules, strip "+something" and
- * remove interior "."s in a dotString. Fold case.
+ * Apply Gmail style address normalization rules, strip "+something"
+ * and remove interior "."s in a dotString. Fold case.
  */
 export function normalize(address: string) {
     const a = parse(address);
@@ -52,6 +52,37 @@ export function normalize(address: string) {
             return a.localPart.QuotedString;
         }
         return normalize_dot_string(a.localPart.DotString);
+    })();
+    return `${local}@${domain}`;
+}
+
+/**
+ * Apply canonicalization rules to quoted string.
+ */
+export function canonicalize_quoted_string(quoted_string: string) {
+    const unquoted = quoted_string.substr(1).substr(0, quoted_string.length - 2);
+    const unescaped = unquoted.replace(/(?:\\(.))/g, "$1");
+    const reescaped = unescaped.replace(/(?:(["\\]))/g, "\\$1");
+    return `"${reescaped}"`; // re-quote
+}
+
+/**
+ * Apply a canonicalization consistent with standards to support
+ * comparison as a string.
+ */
+export function canonicalize(address: string) {
+    const a = parse(address);
+    const domain = (function () {
+        if (a.domainPart.AddressLiteral) {
+            return a.domainPart.AddressLiteral;
+        }
+        return a.domainPart.DomainName.toLowerCase();
+    })();
+    const local = (function () {
+        if (a.localPart.QuotedString) {
+            return canonicalize_quoted_string(a.localPart.QuotedString);
+        }
+        return a.localPart.DotString;
     })();
     return `${local}@${domain}`;
 }

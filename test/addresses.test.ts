@@ -2,7 +2,13 @@
 
 const assert = require("assert");
 
-const { normalize_dot_string, normalize, parse } = require("../lib/index.js");
+const {
+    canonicalize_quoted_string,
+    canonicalize,
+    normalize_dot_string,
+    normalize,
+    parse,
+} = require("../lib/index.js");
 
 function _check(address: string, dot?: string, quote?: string, name?: string, addr?: string) {
     const a = parse(address);
@@ -200,5 +206,36 @@ describe("test normalize", function () {
     });
     it("Foo.Bar+Baz@Example.Org", function () {
         assert.equal(normalize("Foo.Bar+Baz@Example.Org"), "foobar@example.org");
+    });
+});
+
+describe("test canonicalize", function () {
+    const bs = "\\";
+    it('"foo"', function () {
+        assert.equal(canonicalize_quoted_string('"foo"'), '"foo"');
+    });
+    it(`"foo${bs}+bar"`, function () {
+        assert.equal(canonicalize_quoted_string(`"foo${bs}+bar"`), '"foo+bar"');
+    });
+    it(`"foo${bs}.bar"`, function () {
+        assert.equal(canonicalize_quoted_string(`"foo${bs}.bar"`), '"foo.bar"');
+    });
+    it(`"foo${bs}\\bar"`, function () {
+        assert.equal(canonicalize_quoted_string(`"foo${bs}\\bar"`), '"foo\\\\bar"');
+    });
+    it(`"foo${bs}"bar"`, function () {
+        assert.equal(canonicalize_quoted_string(`"foo${bs}"bar"`), '"foo\\"bar"');
+    });
+    it('"foo"@example.org', function () {
+        assert.equal(canonicalize('"foo"@example.org'), '"foo"@example.org');
+    });
+    it(`"foo${bs}"bar"@Example.ORG`, function () {
+        assert.equal(canonicalize(`"foo${bs}"bar"@Example.ORG`), '"foo\\"bar"@example.org');
+    });
+    it(`"foo ${bs}${bs} ${bs}"bar"@example.org`, function () {
+        assert.equal(canonicalize(`"foo ${bs}${bs} ${bs}"bar"@example.org`), '"foo \\\\ \\"bar"@example.org');
+    });
+    it(`"f${bs}oo${bs}bar"@Example.ORG`, function () {
+        assert.equal(canonicalize(`"f${bs}oo${bs}bar"@Example.ORG`), '"foobar"@example.org');
     });
 });
