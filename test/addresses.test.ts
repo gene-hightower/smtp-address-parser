@@ -87,6 +87,11 @@ describe("good addresses pass", function () {
 });
 
 describe("bad addresses fail", function () {
+    it('"foo@example.com+bob@attacker.com" is not an address', function () {
+        assert.throws(function () {
+            parse("foo@example.com+bob@attacker.com");
+        });
+    });
     it('badly escaped quoted "john\\\\"doe"@example.org', function () {
         assert.throws(function () {
             parse('"john\\\\"doe"@example.org');
