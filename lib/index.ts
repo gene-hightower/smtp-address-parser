@@ -20,9 +20,7 @@ export function parse(address: string) {
     return parser.results[0];
 }
 
-/**
- * Apply Gmail style addreess local-part normalization rules, strip
- * "+something" and remove interior "."s in a dotString. Fold case.
+/** Strip +something, strip '.'s, and map to lower case.
  */
 export function normalize_dot_string(dot_string: string) {
     const tagless = (function () {
@@ -36,29 +34,15 @@ export function normalize_dot_string(dot_string: string) {
     return dotless.toLowerCase();
 }
 
-/**
- * Apply Gmail style address normalization rules, strip "+something"
- * and remove interior "."s in a dotString. Fold case.
+/** The G style address normalization.
  */
 export function normalize(address: string) {
     const a = parse(address);
-    const domain = (function () {
-        if (a.domainPart.AddressLiteral) return a.domainPart.AddressLiteral;
-        return a.domainPart.DomainName.toLowerCase();
-    })();
-    const local = (function () {
-        if (a.localPart.QuotedString) {
-            // Should normalize quoted string.
-            return a.localPart.QuotedString;
-        }
-        return normalize_dot_string(a.localPart.DotString);
-    })();
+    const domain = a.domainPart.AddressLiteral ?? a.domainPart.DomainName.toLowerCase();
+    const local = a.localPart.QuotedString ?? normalize_dot_string(a.localPart.DotString);
     return `${local}@${domain}`;
 }
 
-/**
- * Apply canonicalization rules to quoted string.
- */
 export function canonicalize_quoted_string(quoted_string: string) {
     const unquoted = quoted_string.substr(1).substr(0, quoted_string.length - 2);
     const unescaped = unquoted.replace(/(?:\\(.))/g, "$1");
@@ -72,17 +56,9 @@ export function canonicalize_quoted_string(quoted_string: string) {
  */
 export function canonicalize(address: string) {
     const a = parse(address);
-    const domain = (function () {
-        if (a.domainPart.AddressLiteral) {
-            return a.domainPart.AddressLiteral;
-        }
-        return a.domainPart.DomainName.toLowerCase();
-    })();
-    const local = (function () {
-        if (a.localPart.QuotedString) {
-            return canonicalize_quoted_string(a.localPart.QuotedString);
-        }
-        return a.localPart.DotString;
-    })();
+    const domain = a.domainPart.AddressLiteral ?? a.domainPart.DomainName.toLowerCase();
+    const local = a.localPart.QuotedString
+        ? canonicalize_quoted_string(a.localPart.QuotedString)
+        : a.localPart.DotString;
     return `${local}@${domain}`;
 }
