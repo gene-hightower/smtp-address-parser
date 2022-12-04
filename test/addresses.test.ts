@@ -48,6 +48,9 @@ describe("good addresses pass", function () {
     it("quoted double dot", function () {
         _check('"john..doe"@example.org', undefined, '"john..doe"', "example.org", undefined);
     });
+    it("quoted string with backslash escape", function () {
+        _check('"\\<john-doe\\>"@example.org', undefined, '"\\<john-doe\\>"', "example.org", undefined);
+    });
     it('address in quoted local-part "john.doe@example.org"@example.org', function () {
         _check('"john.doe@example.org"@example.org', undefined, '"john.doe@example.org"', "example.org", undefined);
     });
