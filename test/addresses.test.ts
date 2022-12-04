@@ -48,6 +48,9 @@ describe("good addresses pass", function () {
     it("quoted double dot", function () {
         _check('"john..doe"@example.org', undefined, '"john..doe"', "example.org", undefined);
     });
+    it("quoted string with angle brackets", function () {
+        _check('"<john-doe>"@example.org', undefined, '"<john-doe>"', "example.org", undefined);
+    });
     it("quoted string with backslash escape", function () {
         _check('"\\<john-doe\\>"@example.org', undefined, '"\\<john-doe\\>"', "example.org", undefined);
     });
