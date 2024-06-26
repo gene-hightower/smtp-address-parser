@@ -39,9 +39,6 @@ describe("good addresses pass", function () {
     it("one-letter local-part", function () {
         _check("x@example.com", "x", undefined, "example.com", undefined);
     });
-    it("local domain name with no TLD", function () {
-        _check("admin@mailserver1", "admin", undefined, "mailserver1", undefined);
-    });
     it("space between the quotes", function () {
         _check('" "@example.org', undefined, '" "', "example.org", undefined);
     });
@@ -93,6 +90,11 @@ describe("good addresses pass", function () {
 });
 
 describe("bad addresses fail", function () {
+    it("local domain name with no TLD", function () {
+        assert.throws(function () {
+            parse("admin@mailserver1"); // Now fails.
+        });
+    });
     it('"foo@example.com+bob@attacker.com" is not an address', function () {
         assert.throws(function () {
             parse("foo@example.com+bob@attacker.com");
@@ -183,6 +185,21 @@ describe("bad addresses fail", function () {
     it("i_like_underscore@but_its_not_allowed_in_this_part.example.com", function () {
         assert.throws(function () {
             parse("i_like_underscore@but_its_not_allowed_in_this_part.example.com");
+        });
+    });
+    it("domain too long", function () {
+        assert.throws(function () {
+            parse("local-part@XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.xyz");
+        });
+    });
+    it("tld too short", function () {
+        assert.throws(function () {
+            parse("tld-too-short@foo.x");
+        });
+    });
+    it("label too long", function () {
+        assert.throws(function () {
+            parse("local-part@label_too_long_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.xyz");
         });
     });
 });

@@ -10,6 +10,14 @@ const grammar = nearley.Grammar.fromCompiled(myGrammar);
 // <https://tools.ietf.org/html/rfc5321#section-4.1.2>
 
 export function parse(address: string) {
+
+    // An insane length, to protect the parsing code from huge input. SMTP line limit, minus command size.
+    const insane_length = 1000 - "MAIL FROM:<>\r\n".length;
+
+    if (address.length > insane_length) {
+        throw new Error("address too long");
+    }
+
     const parser = new nearley.Parser(grammar);
     parser.feed(address);
 
@@ -17,6 +25,29 @@ export function parse(address: string) {
         throw new Error("address parsing failed: ambiguous grammar");
     }
 
+    // Domain checks
+
+    const at_idx = address.lastIndexOf('@'); // must be found, since parse was successful
+    const domain = address.substring(at_idx + 1);
+    if (domain[0] !== '[') {       // Not an address literal
+        if (domain.length > 253) {
+            throw new Error("domain too long");
+        }
+        const labels = domain.split(".");
+        if (labels.length < 2) {
+            throw new Error("domain not fully qualified");
+        }
+        if (labels[labels.length - 1].length < 2) {
+            throw new Error("top level domain label too short");
+        }
+
+        labels.sort(function(a: string, b: string) {
+            return b.length - a.length;
+        });
+        if (labels[0].length > 63) {
+            throw new Error("domain label too long");
+        }
+    }
     return parser.results[0];
 }
 
