@@ -18,7 +18,7 @@ Total length limit of an address is 986 octets; based on a 1,000 octet SMTP line
 
 See <https://tools.ietf.org/html/rfc1035> section 2.3.4. Size limits:
 
-Domain names are limited to 255 octets, when encoded with a length byte before each label, and including the top-level zero length label. So, the effctive limit with interstitial dots is 253 octets.
+Domain names are limited to 255 octets. When encoded with a length byte before each label, and including the top-level zero length label, the effctive limit (with interstitial dots) is 253 octets.
 
 Labels within a domain name are limited to 63 octets.
 
