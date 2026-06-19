@@ -16,9 +16,18 @@ function flat_string(d: any) {
 
 # Some macros
 
+times_2[X]     -> $X $X
 times_3[X]     -> $X $X $X
+times_4[X]     -> $X $X $X $X
 times_5[X]     -> $X $X $X $X $X
-times_7[X]     -> $X $X $X $X $X $X $X
+times_6[X]     -> $X $X $X $X $X $X
+
+up_to_1[X]     -> $X:?
+up_to_2[X]     -> ($X:? $X):?
+up_to_3[X]     -> (($X:? $X):? $X):?
+up_to_4[X]     -> ((($X:? $X):? $X):? $X):?
+up_to_5[X]     -> (((($X:? $X):? $X):? $X):? $X):?
+up_to_6[X]     -> ((((($X:? $X):? $X):? $X):? $X):? $X):?
 
 ## <https://tools.ietf.org/html/rfc5321#section-4.1.2>
 
@@ -37,7 +46,7 @@ At_domain      -> "@" Domain
 
 Domain         -> sub_domain ("." sub_domain):*
 
-#A_label       -> Let_dig (Ldh_str):?
+#A_label       -> Let_dig Ldh_str:?
 
 sub_domain     -> U_label
 
@@ -49,11 +58,11 @@ U_Let_dig      -> ALPHA_DIGIT_U {% id %}
 
 U_Ldh_str      -> ALPHA_DIG_DASH_U:* U_Let_dig
 
-U_label        -> U_Let_dig (U_Ldh_str):?
+U_label        -> U_Let_dig U_Ldh_str:?
 
 address_literal  -> "[" ( IPv4_address_literal |
-                          IPv6_address_literal |
-                          General_address_literal ) "]"
+                          IPv6_address_literal ) "]"
+                    # Don't match General_address_literal
                     # See Section 4.1.3
 
 non_local_part -> Domain {%
@@ -129,30 +138,23 @@ Snum           -> DIGIT |
                 # representing a decimal integer
                 # value in the range 0 through 255
 
-IPv6_addr      -> IPv6_full | IPv6_comp | IPv6v4_full | IPv6v4_comp
+                # RFC-3986
+IPv6_addr      ->                                 times_6[ h16 ":" ] ls32
+                |                            "::" times_5[ h16 ":" ] ls32
+                | (                   h16):? "::" times_4[ h16 ":" ] ls32
+                | (up_to_1[ h16 ":" ] h16):? "::" times_3[ h16 ":" ] ls32
+                | (up_to_2[ h16 ":" ] h16):? "::" times_2[ h16 ":" ] ls32
+                | (up_to_3[ h16 ":" ] h16):? "::"          h16 ":"   ls32
+                | (up_to_4[ h16 ":" ] h16):? "::"                    ls32
+                | (up_to_5[ h16 ":" ] h16):? "::"                    h16
+                | (up_to_6[ h16 ":" ] h16):? "::"
 
-                # HEXDIG:? HEXDIG:? HEXDIG:? HEXDIG
-IPv6_hex       -> HEXDIG |
-                ( HEXDIG HEXDIG ) |
-                ( HEXDIG HEXDIG HEXDIG ) |
-                ( HEXDIG HEXDIG HEXDIG HEXDIG )
+ls32           -> ( h16 ":" h16) | IPv4_address_literal
 
-IPv6_full      -> IPv6_hex times_7[":" IPv6_hex]
-
-IPv6_comp      -> (IPv6_hex times_5[":" IPv6_hex]):? "::"
-                  (IPv6_hex times_5[":" IPv6_hex]):?
-                # The "::" represents at least 2 16_bit groups of
-                # zeros.  No more than 6 groups in addition to the
-                # "::" may be present.
-
-IPv6v4_full    -> IPv6_hex times_5[":" IPv6_hex] ":" IPv4_address_literal
-
-IPv6v4_comp    -> (IPv6_hex times_3[":" IPv6_hex]):? "::"
-                  (IPv6_hex times_3[":" IPv6_hex] ":"):?
-                  IPv4_address_literal
-                # The "::" represents at least 2 16_bit groups of
-                # zeros.  No more than 4 groups in addition to the
-                # "::" and IPv4_address_literal may be present.
+h16            -> times_4[ HEXDIG ]
+                | times_3[ HEXDIG ]
+                | times_2[ HEXDIG ]
+                | HEXDIG
 
 DIGIT          -> [0-9] {% id %}
 

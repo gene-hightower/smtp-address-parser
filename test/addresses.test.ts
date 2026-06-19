@@ -76,7 +76,7 @@ describe("good addresses pass", function () {
         _check("simple@[IPv6:::1]", "simple", undefined, undefined, "[IPv6:::1]");
     });
     it("Another IPv6 address literal", function () {
-        _check("simple@[IPv6:68:1c:a2:12:4a:e5]", "simple", undefined, undefined, "[IPv6:68:1c:a2:12:4a:e5]");
+        _check("simple@[IPv6:68:1c:a2:12:4a::e5]", "simple", undefined, undefined, "[IPv6:68:1c:a2:12:4a::e5]");
     });
     it("Unicode UTF-8", function () {
         _check("我買@屋企.香港", "我買", undefined, "屋企.香港", undefined);
@@ -84,9 +84,9 @@ describe("good addresses pass", function () {
     it("#user@example.com", function () {
         _check("#user@example.com", "#user", undefined, "example.com", undefined);
     });
-    it("General address literal", function () {
-        _check("simple@[tag:Can-Be-Anything]", "simple", undefined, undefined, "[tag:Can-Be-Anything]");
-    });
+    //it("General address literal", function () {
+    //    _check("simple@[tag:Can-Be-Anything]", "simple", undefined, undefined, "[tag:Can-Be-Anything]");
+    //});
 });
 
 describe("bad addresses fail", function () {
