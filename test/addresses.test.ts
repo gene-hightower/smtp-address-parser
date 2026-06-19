@@ -125,6 +125,11 @@ describe("bad addresses fail", function () {
             parse("user@[127.0.1]");
         });
     });
+    it("not enough v6 pieces [IPv6:68:1c:a2:12:4a:e5]", function () {
+        assert.throws(function () {
+            parse("user@[IPv6:68:1c:a2:12:4a:e5]");
+        });
+    });
     it("user@example.com#", function () {
         assert.throws(function () {
             parse("user@example.com#");
