@@ -78,7 +78,7 @@ describe("good addresses pass", function () {
     it("Another IPv6 address literal", function () {
         _check("simple@[IPv6:68:1c:a2:12:4a::e5]", "simple", undefined, undefined, "[IPv6:68:1c:a2:12:4a::e5]");
     });
-    it("Unicode UTF-8", function () {
+    it("Unicode local-part and domain", function () {
         _check("我買@屋企.香港", "我買", undefined, "屋企.香港", undefined);
     });
     it("#user@example.com", function () {
