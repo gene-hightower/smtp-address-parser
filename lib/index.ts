@@ -18,6 +18,10 @@ export function parse(address: string) {
         throw new Error("address too long");
     }
 
+    if ( address !== address.normalize('NFC') ) {
+        throw new Error("address is not in Normalization Form C (NCF)");
+    }
+
     const parser = new nearley.Parser(grammar);
     parser.feed(address);
 

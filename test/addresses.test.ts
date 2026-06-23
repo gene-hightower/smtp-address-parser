@@ -81,6 +81,9 @@ describe("good addresses pass", function () {
     it("Unicode local-part and domain", function () {
         _check("我買@屋企.香港", "我買", undefined, "屋企.香港", undefined);
     });
+    it("Unicode NFC gené@example.com", function () {
+        _check("gené@example.com", "gené", undefined, "example.com", undefined);
+    });
     it("#user@example.com", function () {
         _check("#user@example.com", "#user", undefined, "example.com", undefined);
     });
@@ -190,6 +193,11 @@ describe("bad addresses fail", function () {
     it("i_like_underscore@but_its_not_allowed_in_this_part.example.com", function () {
         assert.throws(function () {
             parse("i_like_underscore@but_its_not_allowed_in_this_part.example.com");
+        });
+    });
+    it("Unicode NOT NFC gene\u0301@example.com", function () {
+        assert.throws(function () {
+            parse('gene\u0301@example.com');
         });
     });
     it("domain too long", function () {
